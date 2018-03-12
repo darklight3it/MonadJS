@@ -10,6 +10,15 @@ interface ISetoid<T> {
   equals(other: T): boolean;
 }
 
+interface IFunctor{
+   <T,U>(fn: (val:T) => U): IMonad<U>;
+}
+
+interface IApply {
+  <T,U>(afn: IMonad<(val: T) => U>): IMonad<U>
+}
+
+
 /**
  * Monads should implement at least Applicative and Chain standards https://github.com/fantasyland/fantasy-land
  * Added also some other functionalities Functor, Applicative, Chain, Join
@@ -17,8 +26,9 @@ interface ISetoid<T> {
 interface IMonad<T> {
   value: T
   equals(val:T):boolean
-  ap<U>(afn: IMonad<(val: T) => U>): IMonad<U>;
-  map<U>(fn: (val: T) => U): IMonad<U>;
+  ap: IApply
+  map: IFunctor,
+//  map<U>(fn: (val: T) => U): IMonad<U>;
   flatMap<U>(fn: (val: T) => IMonad<U>): IMonad<U>;
 }
 

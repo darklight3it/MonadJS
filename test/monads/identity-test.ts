@@ -2,7 +2,7 @@ import * as mocha from 'mocha';
 import * as chai from 'chai';
 import Identity from '../../src/monads/identity';
 import assertMonadicLaws from '../assertion-utils/monadic-laws-assertions';
-import asserApply from '../assertion-utils/apply-assertions';
+import assertApply from '../assertion-utils/apply-assertions';
 
 describe('Identity Interface', () => {
   it('should follow the Monadic Laws', () => {
@@ -15,6 +15,6 @@ describe('Identity Interface', () => {
   });
 
   it('ap should work ', () => {
-    asserApply(Identity.of(5), Identity, (val:any) => val+2);
+    assertApply(Identity.of(5), Identity, (val:any) => val+2);
   });
 });
