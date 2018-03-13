@@ -1,22 +1,23 @@
+import { setoid, functor, apply } from './common';
 
-const concreteMap : IFunctor = <T,U>(fn: (val:T)=>U) => new IdentityMonad<any>(fn(this.value));
-const concreteApply : IApply = <T,U>(afn: IMonad<(val: T) => U>) => afn.map<T,U>(this.value());
+const application : IApplication<any> = (value: any) => new IdentityMonad(value);
 
 
-class IdentityMonad<T> implements IMonad<T> {
-  public value: T;
+class IdentityMonad<T> implements IMonad<T>, ISetoid<T> {
+  private _value: T;
 
   constructor(value: T) {
-    this.value = value;
-    this.map = concreteMap;
-    this.ap = concreteApply;
+    this._value = value;
   }
 
-  map: IFunctor;
-  ap: IApply;
-  equals = (other: T) => other === this.value;
+  lift = () => this._value
+  of = application;
+  map = functor;
+  ap = apply;
+  flatMap = <U>(fn: (val: T) => IMonad<U>): IMonad<U> => fn(this.lift());
+  equals = setoid
+ // equals = setoid;
 
-  flatMap = <U>(fn: (val: T) => IMonad<U>): IMonad<U> => fn(this.value);
 }
 
 

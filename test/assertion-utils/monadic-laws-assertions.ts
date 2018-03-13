@@ -10,22 +10,22 @@ const equal = chai.assert.equal;
 
 const assertFirstLaw = (monadObj: IMonad<any>, fn:(val:any)=> any, gn: (val: any) => IMonad<any>) =>
   equal(
-    fn(monadObj.value),
-    monadObj.flatMap(gn).value,
+    fn(monadObj.lift()),
+    monadObj.flatMap(gn).lift(),
     'The Monad does not respect left identity'
   );
 
 const assertSecondLaw = (monadObj: IMonad<any>, fn: (val: any) => IMonad<any>) =>
   equal(
-    monadObj.flatMap(fn).value,
-    monadObj.value,
+    monadObj.flatMap(fn).lift(),
+    monadObj.lift(),
     'The Monad does not respect right identity'
 );
 
 const assertThirdLaw = (monadObj: IMonad<any>, fn: (val: any) => IMonad<any>, gn: (val:any) => IMonad<any>) =>
   equal(
-    monadObj.flatMap(fn).flatMap(gn).value,
-    monadObj.flatMap(val => fn(val).flatMap(gn)).value,
+    monadObj.flatMap(fn).flatMap(gn).lift(),
+    monadObj.flatMap(val => fn(val).flatMap(gn)).lift(),
     'The Monad does not associativity'
 );
 

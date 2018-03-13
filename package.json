@@ -10,7 +10,10 @@
   "engines": {
     "node": ">=0.10.36"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fantasy-land": "^3.5.0",
+    "fast-deep-equal": "^1.1.0"
+  },
   "devDependencies": {
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.48",
