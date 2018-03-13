@@ -1,4 +1,4 @@
-# MonadJS
+# MonadTS
 
 ## Introduction
 
