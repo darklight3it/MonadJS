@@ -15,8 +15,8 @@ class IdentityMonad<T> implements IMonad<T>, ISetoid<T> {
   map = functor;
   ap = apply;
   flatMap = <U>(fn: (val: T) => IMonad<U>): IMonad<U> => fn(this.lift());
-  equals = setoid
- // equals = setoid;
+  equals = setoid;
+ 
 
 }
 
