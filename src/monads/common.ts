@@ -13,8 +13,8 @@ const functor: IFunctor<any> = function<U>(fn: (val: any) => U) {
 
 
 const apply: IApply<any> = function<U>(afn: IMonad<((val: any) => U)>) {
-  return afn.map<U>(this.lift());
-};
+    return this.map(afn.lift());
+  };
 
 
 

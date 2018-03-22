@@ -21,7 +21,4 @@ describe('Identity Interface', () => {
     
   });
 
-  it('ap should work ', () => {
-    assertApply(Identity.of(5), Identity, (val:any) => val+2);
-  });
 });

@@ -15,7 +15,7 @@ interface IFunctor<T>{
 }
 
 interface IApply<T> {
-  <U>(afn: IMonad<(val: any) => U>): IMonad<U>
+  <U>(afn: IMonad<(val: T) => U>): IMonad<U>
 }
 
 interface IApplication <T> {
@@ -27,13 +27,11 @@ interface IApplication <T> {
  * Monads should implement at least Applicative and Chain standards https://github.com/fantasyland/fantasy-land
  * Added also some other functionalities Functor, Applicative, Chain, Join
  */
-interface IMonad<T>{
+interface IMonad<T> extends ISetoid<T>{
   lift: () => T
   of: IApplication<T>
-  //equals: ISetoid<T>
   ap: IApply<T>
   map: IFunctor<T>
-//  map<U>(fn: (val: T) => U): IMonad<U>;
   flatMap<U>(fn: (val: T) => IMonad<U>): IMonad<U>;
 }
 
