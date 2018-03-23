@@ -2,6 +2,14 @@ import * as mocha from 'mocha';
 import * as chai from 'chai';
 import { setoid, functor, apply } from '../../src/monads/common';
 
+/**
+ * This Tests provides the general specification that a Monad shoul respect. This comes from category theory
+ * 
+ * 
+ * 
+ */
+
+
 // #region Setoid
 /**
 ### Setoid
@@ -84,7 +92,7 @@ describe('Functor', () => {
 3. `A.of(y).ap(u)` is equivalent to `u.ap(A.of(f => f(y)))` (interchange)
 **/
 
-describe.only('Applicative', () => {
+describe('Applicative', () => {
   it('Should respect identity property', () => {
     const implementoids = createImplementoids(...arrValues);
     const identity = (x: any) => x;
@@ -111,6 +119,32 @@ describe.only('Applicative', () => {
     const u = StaticImplementoid.of(g);
 
     isTrue(impl.ap(u).equals(u.ap(StaticImplementoid.of((f: Function) => f(value)))));
+  });
+});
+
+// #endregion
+
+// #region Apply
+/* 
+### Apply
+1. `v.ap(u.ap(a.map(f => g => x => f(g(x)))))` is equivalent to `v.ap(u).ap(a)` (composition)
+*/
+
+describe('Apply', () => {
+
+  it('Should respect composition property', () => {
+    
+    const value = 1;
+    const impl = StaticImplementoid.of(value);
+    const f = (x: number) => x * 3;
+    const g = (x: number) => x + 2;
+    const u = StaticImplementoid.of(g);
+    const v = StaticImplementoid.of(f)
+
+    const curriedComposition = (f:(arg:number) => number) => (g:(arg:number)=>number) => (x:number) => f(g(x));
+
+    isTrue(impl.ap(u.ap(v.map(curriedComposition))).equals(impl.ap(u).ap(v)));
+    
   });
 });
 
