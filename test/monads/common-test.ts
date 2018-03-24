@@ -1,9 +1,12 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
-import { setoid, functor, apply } from '../../src/monads/common';
+import { setoid, functor, apply, chain } from '../../src/monads/common';
 
 /**
- * This Tests provides the general specification that a Monad shoul respect. This comes from category theory
+ * This Tests provides the general specification that a Monad shoul respect. My frame of reference was the outstanding specification
+ * fantas-land, which provides a complete description of all the structures in Category Theory. You can find the specification here:
+ * 
+ * - https://github.com/fantasyland/fantasy-land
  * 
  * 
  * 
@@ -150,6 +153,27 @@ describe('Apply', () => {
 
 // #endregion
 
+// #region Chain
+/* 
+### Chain
+1. `m.chain(f).chain(g)` is equivalent to `m.chain(x => f(x).chain(g))` (associativity)
+*/
+
+describe('Chain', () => {
+
+  it('Should respect associativity property', () => {
+    const value = 1;
+    const impl = StaticImplementoid.of(value);
+    const f = (x: number) => StaticImplementoid.of(x * 3);
+    const g = (x: number) => StaticImplementoid.of(x + 2);
+
+    isTrue(impl.flatMap(f).flatMap(g).equals(impl.flatMap(x => f(x).flatMap(g))))
+    
+  });
+});
+
+// #endregion
+
 // #region TestClass Implementoid
 class Implementoid<T> implements IMonad<T>, ISetoid<T> {
   private _value: T;
@@ -160,9 +184,7 @@ class Implementoid<T> implements IMonad<T>, ISetoid<T> {
   of = application;
   ap = apply;
   map = functor;
-  flatMap<U>(fn: (val: any) => IMonad<U>): IMonad<U> {
-    throw new Error('Method not implemented.');
-  }
+  flatMap = chain;
   equals = setoid;
 }
 

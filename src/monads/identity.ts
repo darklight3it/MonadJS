@@ -1,4 +1,4 @@
-import { setoid, functor, apply } from './common';
+import { setoid, functor, apply, chain } from './common';
 
 const application: IApplication<any> = (value: any) => new IdentityMonad(value);
 
@@ -13,7 +13,7 @@ class IdentityMonad<T> implements IMonad<T> {
   of = application;
   map = functor;
   ap = apply;
-  flatMap = <U>(fn: (val: T) => IMonad<U>): IMonad<U> => fn(this.lift());
+  flatMap = chain;
   equals = setoid;
 }
 
