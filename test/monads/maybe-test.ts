@@ -1,11 +1,11 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
-import StaticIdentity from '../../src/monads/identity';
+import Maybe from '../../src/monads/maybe';
 import assertMonadicLaws from '../assertion-utils/monadic-laws-assertions';
 
 
-describe('Identity Monad', () => {
+describe('Maybe Monad', () => {
   it('should follow the Monadic Laws', () => {
-    assertMonadicLaws(StaticIdentity);
+    assertMonadicLaws(Maybe);
   });
 });

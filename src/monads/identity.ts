@@ -17,12 +17,12 @@ class IdentityMonad<T> implements IMonad<T> {
   equals = setoid;
 }
 
-var Identity = function(): IMonadStatic {
+const Identity = function(): IMonadStatic {
   let identityStatic = <IMonadStatic>function(value: any) {};
 
-  identityStatic.of = (value: any) => new IdentityMonad(value);
+  identityStatic.of = application;
 
   return identityStatic;
-};
+}();
 
-export default Identity();
+export default Identity;
