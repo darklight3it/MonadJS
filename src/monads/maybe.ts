@@ -1,7 +1,16 @@
-import { setoid, functor, apply, chain } from './common';
+import { setoid, functor, apply } from './common';
 
 const isSome = (value: any) => value !== null && value !== undefined;
 const isNone = (value: any) => !isSome(value);
+
+const chain = function<T, U>(fn: (val: T) => IMonad<U>) {  
+  const val = fn(this.lift());
+
+  if(this.isSome())
+    return val ;
+  
+  return isSome(val) ? val : this;
+};
 
 class Some<T> implements IMonad<T> {
   private _value: T;
@@ -19,16 +28,19 @@ class Some<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
-  isSome = isSome;
-  isNone = isNone;
+  isSome = function() {
+    return isSome(this._value)
+  };
+  isNone = function(){
+    return isNone(this._value)
+  };
 }
 
 class None<T> implements IMonad<T> {
   private _value: T;
 
   constructor(value: T) {
-    if (isSome(value))
-      throw 'A None monad cannot be created from ' + value;
+    if (isSome(value)) throw 'A None monad cannot be created from ' + value;
 
     this._value = value;
   }
@@ -39,10 +51,14 @@ class None<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
-  isSome = isSome;
-  isNone = isNone;
+  isSome = function() {
+    return isSome(this._value);
+  };
+  isNone = function() {
+    return isNone(this._value);
+  };
 }
-export class MaybeStatic implements IMonadStatic<any> {
+class MaybeStatic implements IMonadStatic<any> {
   of =(value:any) => isSome(value) ? new Some(value) : new None(value);
   some = (value:any) => new Some(value);
   none = (value:any) => new None(value);
@@ -50,4 +66,4 @@ export class MaybeStatic implements IMonadStatic<any> {
 
 const maybeStatic = new MaybeStatic();
 
-export { maybeStatic as Maybe, Some, None };
+export { maybeStatic as Maybe, Some, None, MaybeStatic };

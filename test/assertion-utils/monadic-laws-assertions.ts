@@ -1,39 +1,23 @@
 import * as chai from 'chai';
 
-/** Three Monadic Laws
- *  Left identity: unit(x).chain(f) ==== f(x)
- *  Right identity: m.chain(unit) ==== m
- *  Associativity: m.chain(f).chain(g) ==== m.chain(x => f(x).chain(g))
- */
+const isTrue = chai.assert.isTrue;
 
-const equal = chai.assert.equal;
+// #region Monad
+/* Monad
+1. `M.of(a).chain(f)` is equivalent to `f(a)` (left identity)
+2. `m.chain(M.of)` is equivalent to `m` (right identity)
+3. `m.chain(f).chain(g)` is equivalent to `m.chain(x => f(x).chain(g))` (associativity)
+*/
 
-const assertFirstLaw = <T>(monadObj: IMonad<T>, fn:(val:T)=> T, gn: (val: T) => IMonad<T>) =>
-  equal(
-    fn(monadObj.lift()),
-    monadObj.flatMap(gn).lift(),
-    'The Monad does not respect left identity'
-  );
-
-const assertSecondLaw = <T>(monadObj: IMonad<T>, fn: (val: T) => IMonad<T>) =>
-  equal(
-    monadObj.flatMap(fn).lift(),
-    monadObj.lift(),
-    'The Monad does not respect right identity'
-);
-
-const assertThirdLaw = <T>(monadObj: IMonad<T>, fn: (val: T) => IMonad<T>, gn: (val:T) => IMonad<T>) =>
-  equal(
-    monadObj.flatMap(fn).flatMap(gn).lift(),
-    monadObj.flatMap(val => fn(val).flatMap(gn)).lift(),
-    'The Monad does not associativity'
-);
+const assertMonadicLaws = <T,U,K>(M: IMonadStatic<T>, a:T, f:(val:T) => IMonad<U>, g:(val:U) => IMonad<K>) => { 
+  const m = M.of(a);
+  isTrue(M.of(a).flatMap(f).equals(f(a)), 'The Monad does not respect left identity');
+  isTrue(m.flatMap(M.of).equals(m), 'The Monad does not respect right identity');
+  isTrue(m.flatMap(f).flatMap(g).equals(m.flatMap(x => f(x).flatMap(g))), 'The Monad does not associativity');
+};
 
 
-const assertMonadicLaws = <T>(monad: IMonad<T>, f: (val:T) => T, g: (val:T) => T) => {
-  assertFirstLaw(monad, f, x => monad.of(f(x)));
-  assertSecondLaw(monad, monad.of);
-  assertThirdLaw(monad, x => monad.of(f(x)), x => monad.of(g(x)));
-}
+// #endregion
+
 
 export default assertMonadicLaws;
