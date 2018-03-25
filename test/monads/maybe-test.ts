@@ -1,6 +1,6 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
-import { Maybe, Some } from '../../src/monads/maybe';
+import { Maybe, Some, None} from '../../src/monads/maybe';
 import assertMonadicLaws from '../assertion-utils/monadic-laws-assertions';
 
 
@@ -8,6 +8,7 @@ import assertMonadicLaws from '../assertion-utils/monadic-laws-assertions';
 describe('Maybe Monad', () => {
   it('should follow the Monadic Laws', () => {
     assertMonadicLaws(Maybe.of(3), (x: number) => x + 2, (x: number) => x * 3);
+    assertMonadicLaws(Maybe.of(null), (x: number) => x + 2, (x: number) => x * 3);
   });
 });
 // #endregion
@@ -16,14 +17,43 @@ describe('Maybe Monad', () => {
 
 describe('Some Monad', () => {
 
+  it('should correctly create a Some Monad from a non null value', () => {
+    const some  = new Some(3);
+    chai.assert.equal(some.lift(),3);
+  });
+
   it('should throw if it\'s created from null or undefined', ()=>{
-
-    chai.assert.throws(()=>new Some(null),)
-
+    chai.assert.throws(() => new Some(null), 'A Some monad cannot be created from null');
+    chai.assert.throws(() => new Some(undefined), 'A Some monad cannot be created from undefined');
   });
 
   it('should follow the Monadic Laws', () => {
-    assertMonadicLaws(Maybe.of(3), (x: number) => x + 2, (x: number) => x * 3);
+    const some = new Some(3);
+    assertMonadicLaws(some, (x: number) => x + 2, (x: number) => x * 3);
+  });
+});
+
+// #endregion
+
+// #region None
+
+describe('None Monad', () => {
+
+  it('should correctly create a None Monad from a null or undefined value', () => {
+    const firstNone  = new None(null);
+    chai.assert.isNull(firstNone.lift());
+
+    const secondNone = new None(undefined);
+    chai.assert.isUndefined(secondNone.lift());
+  });
+
+  it('should throw if it\'s created from a non null value', ()=>{
+    chai.assert.throws(() => new None(3), 'A None monad cannot be created from 3');
+  });
+
+  it('should follow the Monadic Laws', () => {
+    const none = new None(null);
+    assertMonadicLaws(none, (x: number) => x + 2, (x: number) => x * 3);
   });
 });
 

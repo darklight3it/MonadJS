@@ -39,15 +39,8 @@ interface IMonad<T> extends ISetoid<T> {
 }
 
 /**
- * Factory Interface that creates a Monad
- */
-interface IMonadFactory extends Function {
-  <T>(val: T): IMonad<T>;
-}
-
-/**
  * Interface for static class that creates the Monad (e.g. Monad.of())
  */
-interface IMonadStatic extends IMonadFactory {
-  of: IMonadFactory; // alias for unit
+interface IMonadStatic<T> {
+   of: IApplication<T>; // alias for unit
 }

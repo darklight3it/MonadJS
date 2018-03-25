@@ -8,7 +8,7 @@ class Some<T> implements IMonad<T> {
 
   constructor(value: T) {
     if (isNone(value))
-      throw 'A Some monad cannot be created from' + value.toString();
+      throw 'A Some monad cannot be created from ' + value;
 
     this._value = value;
   }
@@ -19,6 +19,8 @@ class Some<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
+  isSome = isSome;
+  isNone = isNone;
 }
 
 class None<T> implements IMonad<T> {
@@ -26,7 +28,7 @@ class None<T> implements IMonad<T> {
 
   constructor(value: T) {
     if (isSome(value))
-      throw 'A None monad cannot be created from' + value.toString();
+      throw 'A None monad cannot be created from ' + value;
 
     this._value = value;
   }
@@ -37,18 +39,15 @@ class None<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
+  isSome = isSome;
+  isNone = isNone;
+}
+export class MaybeStatic implements IMonadStatic<any> {
+  of =(value:any) => isSome(value) ? new Some(value) : new None(value);
+  some = (value:any) => new Some(value);
+  none = (value:any) => new None(value);
 }
 
+const maybeStatic = new MaybeStatic();
 
-
-const MaybeStatic = (function(): IMonadStatic {
-  let maybeStatic = <IMonadStatic>function(value: any) {};
-
-  maybeStatic.of = (value: any) =>
-    isSome(value) ? new Some(value) : new None(value);
-    
-
-  return maybeStatic;
-})();
-
-export { MaybeStatic as Maybe, Some, None};
+export { maybeStatic as Maybe, Some, None };
