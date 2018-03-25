@@ -1,8 +1,8 @@
 import { setoid, functor, apply, chain } from './common';
 
-const application: IApplication<any> = (value: any) => new IdentityMonad(value);
+const application: IApplication<any> = (value: any) => new Identity(value);
 
-class IdentityMonad<T> implements IMonad<T> {
+class Identity<T> implements IMonad<T> {
   private _value: T;
 
   constructor(value: T) {
@@ -17,12 +17,11 @@ class IdentityMonad<T> implements IMonad<T> {
   equals = setoid;
 }
 
-const Identity = function(): IMonadStatic {
+const IdentityStatic = function(): IMonadStatic {
   let identityStatic = <IMonadStatic>function(value: any) {};
 
   identityStatic.of = application;
 
   return identityStatic;
-}();
-
-export default Identity;
+}()
+export {IdentityStatic as Identity};

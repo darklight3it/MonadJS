@@ -7,9 +7,6 @@ import { setoid, functor, apply, chain } from '../../src/monads/common';
  * fantas-land, which provides a complete description of all the structures in Category Theory. You can find the specification here:
  * 
  * - https://github.com/fantasyland/fantasy-land
- * 
- * 
- * 
  */
 
 

@@ -8,33 +8,32 @@ import * as chai from 'chai';
 
 const equal = chai.assert.equal;
 
-const assertFirstLaw = (monadObj: IMonad<any>, fn:(val:any)=> any, gn: (val: any) => IMonad<any>) =>
+const assertFirstLaw = <T>(monadObj: IMonad<T>, fn:(val:T)=> T, gn: (val: T) => IMonad<T>) =>
   equal(
     fn(monadObj.lift()),
     monadObj.flatMap(gn).lift(),
     'The Monad does not respect left identity'
   );
 
-const assertSecondLaw = (monadObj: IMonad<any>, fn: (val: any) => IMonad<any>) =>
+const assertSecondLaw = <T>(monadObj: IMonad<T>, fn: (val: T) => IMonad<T>) =>
   equal(
     monadObj.flatMap(fn).lift(),
     monadObj.lift(),
     'The Monad does not respect right identity'
 );
 
-const assertThirdLaw = (monadObj: IMonad<any>, fn: (val: any) => IMonad<any>, gn: (val:any) => IMonad<any>) =>
+const assertThirdLaw = <T>(monadObj: IMonad<T>, fn: (val: T) => IMonad<T>, gn: (val:T) => IMonad<T>) =>
   equal(
     monadObj.flatMap(fn).flatMap(gn).lift(),
     monadObj.flatMap(val => fn(val).flatMap(gn)).lift(),
     'The Monad does not associativity'
 );
 
-const assertMonadicLaws = (monad: IMonadStatic) => { 
-  const monadObj = monad.of(5);
 
-  assertFirstLaw(monadObj, (val) => val + 2, (val)=> monad.of(val+2));
-  assertSecondLaw(monadObj, monad.of);
-  assertThirdLaw(monadObj, val => monad.of(val + 2), val => monad.of(val * 3));
+const assertMonadicLaws = <T>(monad: IMonad<T>, f: (val:T) => T, g: (val:T) => T) => {
+  assertFirstLaw(monad, f, x => monad.of(f(x)));
+  assertSecondLaw(monad, monad.of);
+  assertThirdLaw(monad, x => monad.of(f(x)), x => monad.of(g(x)));
 }
 
 export default assertMonadicLaws;
