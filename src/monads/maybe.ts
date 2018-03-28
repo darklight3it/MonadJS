@@ -28,12 +28,8 @@ class Some<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
-  isSome = function() {
-    return isSome(this._value)
-  };
-  isNone = function(){
-    return isNone(this._value)
-  };
+  isSome = () => true
+  isNone = () => false
 }
 
 class None<T> implements IMonad<T> {
@@ -51,12 +47,8 @@ class None<T> implements IMonad<T> {
   ap = apply;
   flatMap = chain;
   equals = setoid;
-  isSome = function() {
-    return isSome(this._value);
-  };
-  isNone = function() {
-    return isNone(this._value);
-  };
+  isSome = () => false;
+  isNone = () => true
 }
 class MaybeStatic implements IMonadStatic<any> {
   of =(value:any) => isSome(value) ? new Some(value) : new None(value);

@@ -4,7 +4,7 @@ import { setoid, functor, apply, chain } from '../../src/monads/common';
 
 /*
  * This Tests provides the general specification that a Monad shoul respect. My frame of reference was the outstanding specification
- * fantas-land, which provides a complete description of all the structures in Category Theory. You can find the specification here:
+ * fantasy-land, which provides a complete description of all the structures in Category Theory. You can find the specification here:
  * 
  * - https://github.com/fantasyland/fantasy-land
  */

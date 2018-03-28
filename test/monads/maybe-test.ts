@@ -12,8 +12,12 @@ describe('Maybe Monad', () => {
     assertMonadicLaws(Maybe, 3, f, g); // Assert for Some values
   });
   
-  it('should follow the Monadic Laws for None', () => {
+  it('should follow the Monadic Laws for null', () => {
     assertMonadicLaws(Maybe, null, f, g); // Assert for Some values
+  });
+
+  it('should follow the Monadic Laws for undefined', () => {
+    assertMonadicLaws(Maybe, undefined, f, g); // Assert for Some values
   });
 });
 // #endregion
