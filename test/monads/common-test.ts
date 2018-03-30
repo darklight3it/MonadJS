@@ -1,8 +1,10 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
 import { setoid, functor, apply, chain } from '../../src/monads/common';
+import {Identity} from '../../src/monads/identity';
+import {Maybe} from '../../src/monads/maybe';
 
-const forEach = require('mocha-each');
+const itParam = require('mocha-param');
 
 /*
  * This Tests provides the general specification that a Monad shoul respect. My frame of reference was the outstanding specification
@@ -11,27 +13,7 @@ const forEach = require('mocha-each');
  * - https://github.com/fantasyland/fantasy-land
  */
 
- // #region TestClass Implementoid
-class Implementoid<T> implements IMonad<T>, ISetoid<T> {
-  private _value: T;
-  constructor(value: T) {
-    this._value = value;
-  }
-  lift = () => this._value;
-  of = application;
-  ap = apply;
-  map = functor;
-  flatMap = chain;
-  equals = setoid;
-}
-
-
-class StaticImplementoid implements IMonadStatic<any> {
-  of = (value: any) => new Implementoid(value);
-}
-
-// #endregion
-
+ 
 // #region Setoid
 /*
 ### Setoid
@@ -41,22 +23,24 @@ class StaticImplementoid implements IMonadStatic<any> {
 **/
 
 const arrValues = ['asd', 1, { value: '1' }, { value: () => {} }];
-const staticImplementoid = new StaticImplementoid();
+
+const staticMonadArray = [Identity, Maybe];
 
 describe('Setoid', () => {
-
-  it('Should respect reflexivity property', () => {
-    const arrayOfImplementoids = createImplementoids(...arrValues);
-    const anotherArrayOfImplementoids = createImplementoids(...arrValues);
+  
+  itParam('[${value.constructor.name}] Should respect reflexivity property  ', staticMonadArray , (staticMonad: IMonadStatic<any>) => {
+    const arrayOfImplementoids = createMonads(staticMonad, ...arrValues);
+    const anotherArrayOfImplementoids = createMonads(staticMonad, ...arrValues);
 
     arrayOfImplementoids.map((impl, i) =>
       isTrue(impl.equals(anotherArrayOfImplementoids[i]))
     );
   });
 
-  it('Should respect simmetry property', () => {
-    const arrayOfImplementors = createImplementoids(...arrValues);
-    const anotherArrayOfImplementors = createImplementoids(...arrValues);
+  
+  itParam('[${value.constructor.name}] Should respect simmetry property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
+    const arrayOfImplementors = createMonads(staticMonad, ...arrValues);
+    const anotherArrayOfImplementors = createMonads(staticMonad, ...arrValues);
 
     arrayOfImplementors.map((impl, i) =>
       anotherArrayOfImplementors.map(anotherImpl =>
@@ -65,10 +49,11 @@ describe('Setoid', () => {
     );
   });
 
-  it('Should respect transitivity property', () => {
-    const arrayOfImplementors = createImplementoids(...arrValues);
-    const anotherArrayOfImplementors = createImplementoids(...arrValues);
-    const yetAnotherArrayOfImplementors = createImplementoids(...arrValues);
+  
+  itParam('[${value.constructor.name}] Should respect transitivity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
+    const arrayOfImplementors = createMonads(staticMonad,...arrValues);
+    const anotherArrayOfImplementors = createMonads(staticMonad,...arrValues);
+    const yetAnotherArrayOfImplementors = createMonads(staticMonad,...arrValues);
 
     arrayOfImplementors.map((impl, i) => {
       isTrue(impl.equals(anotherArrayOfImplementors[i]));
@@ -91,14 +76,14 @@ describe('Setoid', () => {
 **/
 
 describe('Functor', () => {
-  it('should respect identity property', () => {
-    const implementoids = createImplementoids(...arrValues);
+  itParam('[${value.constructor.name}] should respect identity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
+    const implementoids = createMonads(staticMonad, ...arrValues);
 
-    implementoids.map(impl => isTrue(impl.map((x:any) => x).equals(impl)));
+    implementoids.map(impl => isTrue(impl.map((x: any) => x).equals(impl)));
   });
 
-  it('should respect the composition property', () => {
-    const implementoid = staticImplementoid.of(1);
+  itParam('[${value.constructor.name}] should respect the composition property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
+    const implementoid = staticMonad.of(1);
     const f = (value: any) => value + 5;
     const g = (value: any) => 0;
 
@@ -117,34 +102,34 @@ describe('Functor', () => {
 **/
 
 describe('Applicative', () => {
-  it('Should respect identity property', () => {
-    const implementoids = createImplementoids(...arrValues);
+  itParam('[${value.constructor.name}] Should respect identity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
+    const implementoids = createMonads(staticMonad, ...arrValues);
     const identity = (x: any) => x;
 
     implementoids.map(impl =>
-      isTrue(impl.ap(staticImplementoid.of(identity)).equals(impl))
+      isTrue(impl.ap(staticMonad.of(identity)).equals(impl))
     );
   });
 
-  it('Should respect homomorphism', () => {
+  itParam('[${value.constructor.name}] Should respect homomorphism', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const value = 1;
-    const impl = staticImplementoid.of(value);
+    const impl = staticMonad.of(value);
     const f = (x: number) => x + 2;
 
     isTrue(impl
-        .ap(staticImplementoid.of(f))
-        .equals(staticImplementoid.of(f(1))));
+        .ap(staticMonad.of(f))
+        .equals(staticMonad.of(f(1))));
   });
 
-  it('Should respect interchange', () => {
+  itParam('[${value.constructor.name}] Should respect interchange', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const value = 1;
-    const impl = staticImplementoid.of(value);
+    const impl = staticMonad.of(value);
     const g = (x: number) => x + 2;
-    const u = staticImplementoid.of(g);
+    const u = staticMonad.of(g);
 
     isTrue(impl
         .ap(u)
-        .equals(u.ap(staticImplementoid.of((f: Function) => f(value)))));
+        .equals(u.ap(staticMonad.of((f: Function) => f(value)))));
   });
 });
 
@@ -158,14 +143,14 @@ describe('Applicative', () => {
 
 describe('Apply', () => {
 
-  it('Should respect composition property', () => {
+  itParam('[${value.constructor.name}] Should respect composition property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     
     const value = 1;
-    const impl = staticImplementoid.of(value);
+    const impl = staticMonad.of(value);
     const f = (x: number) => x * 3;
     const g = (x: number) => x + 2;
-    const u = staticImplementoid.of(g);
-    const v = staticImplementoid.of(f);
+    const u = staticMonad.of(g);
+    const v = staticMonad.of(f);
 
     const curriedComposition = (f:(arg:number) => number) => (g:(arg:number)=>number) => (x:number) => f(g(x));
 
@@ -184,11 +169,11 @@ describe('Apply', () => {
 
 describe('Chain', () => {
 
-  it('Should respect associativity property', () => {
+  itParam('[${value.constructor.name}] Should respect associativity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const value = 1;
-    const impl = staticImplementoid.of(value);
-    const f = (x: number) => staticImplementoid.of(x * 3);
-    const g = (x: number) => staticImplementoid.of(x + 2);
+    const impl = staticMonad.of(value);
+    const f = (x: number) => staticMonad.of(x * 3);
+    const g = (x: number) => staticMonad.of(x + 2);
 
     isTrue(impl.flatMap(f).flatMap(g).equals(impl.flatMap((x:any) => f(x).flatMap(g))))
     
@@ -199,10 +184,8 @@ describe('Chain', () => {
 
 // #region Private Members
 
-const application: IApplication<any> = (value: any) => new Implementoid(value);
-
-const createImplementoids = (...args: any[]) =>
-  args.map(arg => staticImplementoid.of(arg));
+const createMonads = (staticMonad:IMonadStatic<any>,...args: any[]) =>
+  args.map(arg => staticMonad.of(arg));
 
 const isTrue = chai.assert.isTrue;
 // #endregion
