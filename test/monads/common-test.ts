@@ -2,6 +2,8 @@ import * as mocha from 'mocha';
 import * as chai from 'chai';
 import { setoid, functor, apply, chain } from '../../src/monads/common';
 
+const forEach = require('mocha-each');
+
 /*
  * This Tests provides the general specification that a Monad shoul respect. My frame of reference was the outstanding specification
  * fantasy-land, which provides a complete description of all the structures in Category Theory. You can find the specification here:
@@ -42,6 +44,7 @@ const arrValues = ['asd', 1, { value: '1' }, { value: () => {} }];
 const staticImplementoid = new StaticImplementoid();
 
 describe('Setoid', () => {
+
   it('Should respect reflexivity property', () => {
     const arrayOfImplementoids = createImplementoids(...arrValues);
     const anotherArrayOfImplementoids = createImplementoids(...arrValues);
