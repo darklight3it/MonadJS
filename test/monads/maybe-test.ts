@@ -29,14 +29,6 @@ describe('Maybe Monad', () => {
 
     assertIsASome(() => 'hello');
   });
-
-/*  it('should create a None from null', () => {
-    assertIsANone(null);
-  });
-
-  it('should create a None from undefined', () => {
-    assertIsANone(undefined);
-  });*/
 });
 // #endregion
 
