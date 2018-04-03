@@ -113,7 +113,7 @@ const arrValues = ['asd', 1, { value: '1' }, { value: () => {} }];
 **/
 
   describe('Applicative', () => {
-    console.log(name);
+    
     it('Should respect identity property', () => {
       const implementoids = createMonads(staticMonad, ...arrValues);
       const identity = (x: any) => x;

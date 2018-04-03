@@ -1,6 +1,6 @@
 import { setoid, functor, apply } from './common';
 
-const isEmpty = (value: any) => value !== null && value !== undefined;
+const isEmpty = (value: any) => value !== null || value !== undefined;
 
 const chain = function<T, U>(fn: (val: T) => IMonad<U>) {  
   return this.isNone() ? this : fn(this.lift());
@@ -38,7 +38,7 @@ class None implements IMonad<any> {
 
 
 class MaybeStatic implements IMonadStatic<any> {
-  of = (value:any) => !isEmpty(value) ? new Some(value) : new None;
+  of = (value:any) => !isEmpty(value) ? new Some(value) : new None();
 }
 
 const maybeStatic = new MaybeStatic();

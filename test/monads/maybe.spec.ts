@@ -29,6 +29,10 @@ describe('Maybe Monad', () => {
 
     assertIsASome(() => 'hello');
   });
+
+  it('should throw if lifting from none', () => {
+    chai.assert.throws(Maybe.of(null).lift, 'Cannot get a value from None');
+  });
 });
 // #endregion
 
