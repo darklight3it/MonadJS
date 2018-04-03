@@ -7,9 +7,7 @@ const setoid = function(other: ISetoid<any>) {
 };
 
 const apply: IApply<any> = function<T,U>(afn: IMonad<((val: T) => U)>) {
-  //return this.map(afn.lift());
-  return this.flatMap((f:any) => afn.map(f))
- // return this.flatMap(f => afn.map(f));
+  return afn.flatMap<U>(this.map.bind(this));
 };
 
 /* Option.prototype[ap] = function(a) {

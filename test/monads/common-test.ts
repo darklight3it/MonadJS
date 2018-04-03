@@ -76,6 +76,8 @@ describe('Setoid', () => {
 **/
 
 describe('Functor', () => {
+  
+
   itParam('[${value.constructor.name}] should respect identity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const implementoids = createMonads(staticMonad, ...arrValues);
 
@@ -102,6 +104,20 @@ describe('Functor', () => {
 **/
 
 describe('Applicative', () => {
+
+
+  /*it('[${value.constructor.name}] Should respect identity property', () => {
+    const implementoids = createMonads(Identity, ...arrValues);
+    const identity = (x: any) => x;
+
+    implementoids.map(impl =>{
+
+
+      isTrue(impl.ap(Identity.of(identity)).equals(impl))
+     }
+    );
+  });*/
+  
   itParam('[${value.constructor.name}] Should respect identity property', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const implementoids = createMonads(staticMonad, ...arrValues);
     const identity = (x: any) => x;
@@ -110,6 +126,8 @@ describe('Applicative', () => {
       isTrue(impl.ap(staticMonad.of(identity)).equals(impl))
     );
   });
+
+
 
   itParam('[${value.constructor.name}] Should respect homomorphism', staticMonadArray, (staticMonad: IMonadStatic<any>) => {
     const value = 1;
