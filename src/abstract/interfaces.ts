@@ -44,3 +44,7 @@ interface IMonad<T> extends ISetoid<T> {
 interface IMonadStatic<T> {
    of: IApplication<T>; // alias for unit
 }
+
+interface Function {
+    name: string;
+}
