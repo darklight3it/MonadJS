@@ -13,11 +13,11 @@ describe('Maybe Monad', () => {
   });
 
   it('should follow the Monadic Laws for null', () => {
-    assertMonadicLaws(Maybe, null, f, g); // Assert for Some values
+    assertMonadicLaws(Maybe, null, f, g); // Assert for null values
   });
 
   it('should follow the Monadic Laws for undefined', () => {
-    assertMonadicLaws(Maybe, undefined, f, g); // Assert for Some values
+    assertMonadicLaws(Maybe, undefined, f, g); // Assert for undefined values
   });
 
   it('should create a Some from a valid value', () => {
