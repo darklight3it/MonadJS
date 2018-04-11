@@ -1,6 +1,6 @@
 import { setoid, functor, apply } from './common';
 
-const isEmpty = (value: any) => value !== null || value !== undefined;
+const isEmpty = (value: any) => value === null || value === undefined;
 
 const chain = function<T, U>(fn: (val: T) => IMonad<U>) {  
   return this.isNone() ? this : fn(this.lift());
