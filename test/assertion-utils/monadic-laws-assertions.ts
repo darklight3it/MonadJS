@@ -11,6 +11,7 @@ const isTrue = chai.assert.isTrue;
 
 const assertMonadicLaws = <T,U,K>(M: IMonadStatic<T>, a:T, f:(val:T) => IMonad<U>, g:(val:U) => IMonad<K>) => { 
   const m = M.of(a);
+
   isTrue(m.flatMap(f).equals(f(a)), 'The Monad does not respect left identity, left value');
   isTrue(m.flatMap(M.of).equals(m), 'The Monad does not respect right identity');
   isTrue(m.flatMap(f).flatMap(g).equals(m.flatMap(x => f(x).flatMap(g))), 'The Monad does not associativity');

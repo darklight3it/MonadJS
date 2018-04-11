@@ -22,12 +22,9 @@ describe('Maybe Monad', () => {
 
   it('should create a Some from a valid value', () => {
     assertIsASome(2);
-
-    /* assertIsASome('hello');
-
+    assertIsASome('hello');
     assertIsASome(true);
-
-    assertIsASome(() => 'hello'); */
+    assertIsASome(() => 'hello');
   });
 
   it('should create a None from invalid value', () => {
